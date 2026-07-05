@@ -18,15 +18,12 @@ export default function PegQuiz() {
   const [guess, setGuess] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const focusInput = () => {
-    inputRef.current?.focus();
-  };
-
   const advance = useCallback(() => {
     setN((prev) => randomPegNumber(prev));
     setState('asking');
     setGuess('');
-    setTimeout(focusInput, 0);
+    // Refocus after React updates the DOM.
+    setTimeout(() => inputRef.current?.focus(), 0);
   }, []);
 
   const submit = useCallback(() => {
@@ -35,31 +32,35 @@ export default function PegQuiz() {
     setState(isCorrect(guess, n) ? 'correct' : 'wrong');
   }, [state, guess, n]);
 
-  // Auto-advance on correct
+  // Auto-advance on correct.
   useEffect(() => {
     if (state !== 'correct') return;
     const id = setTimeout(advance, AUTO_ADVANCE_MS);
     return () => clearTimeout(id);
   }, [state, advance]);
 
-  // Global keyboard handling for the "wrong" state (Space or Enter → next)
+  // Keep the input focused across state transitions so keyboard-only use keeps working.
   useEffect(() => {
-    if (state !== 'wrong') return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.code === 'Space' || e.code === 'Enter') {
-        e.preventDefault();
-        advance();
-      }
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [state, advance]);
+    if (state === 'wrong') inputRef.current?.focus();
+  }, [state]);
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (state === 'asking' && e.key === 'Enter') {
+      e.preventDefault();
+      submit();
+      return;
+    }
+    if (state === 'wrong' && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      advance();
+    }
+  };
 
   const cardTint =
     state === 'correct'
-      ? 'bg-emerald-500/10 border-emerald-500/40'
+      ? 'bg-emerald-500/15 border-emerald-500'
       : state === 'wrong'
-        ? 'bg-rose-500/10 border-rose-500/40'
+        ? 'bg-rose-500/15 border-rose-500'
         : 'border-gray-800';
 
   const inputBorder =
@@ -85,7 +86,7 @@ export default function PegQuiz() {
       {/* Main */}
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-6 px-4 sm:px-6">
         <div
-          className={`w-full max-w-md rounded-2xl border p-6 sm:p-8 flex flex-col items-center gap-5 transition-colors ${cardTint}`}
+          className={`w-full max-w-md rounded-2xl border-2 p-6 sm:p-8 flex flex-col items-center gap-5 transition-colors ${cardTint}`}
         >
           <p className="text-gray-400 text-xs sm:text-sm uppercase tracking-wider">
             Enter the word for
@@ -99,40 +100,54 @@ export default function PegQuiz() {
             type="text"
             value={guess}
             onChange={(e) => setGuess(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                submit();
-              }
-            }}
+            onKeyDown={handleInputKeyDown}
             readOnly={state !== 'asking'}
             autoFocus
             autoComplete="off"
             autoCapitalize="off"
             spellCheck={false}
+            data-testid="guess-input"
             className={`w-full bg-gray-900/60 text-gray-100 text-2xl text-center rounded-lg border-2 px-4 py-3 outline-none transition-colors ${inputBorder}`}
           />
 
-          {/* Reserved feedback line */}
-          <p
-            className={`min-h-[1.5rem] text-base ${
-              state === 'wrong' ? 'text-rose-400' : 'invisible'
-            }`}
+          {/* Feedback area — reserves ~2 lines so the layout doesn't jump. */}
+          <div
+            className="min-h-[3.5rem] flex flex-col items-center gap-1 text-center"
+            data-testid="feedback"
           >
-            {state === 'wrong'
-              ? `Correct answer: ${PEGS[n]}`
-              : 'placeholder'}
-          </p>
-        </div>
+            {state === 'correct' && (
+              <p className="text-emerald-400 text-xl font-semibold">✓ Correct</p>
+            )}
+            {state === 'wrong' && (
+              <>
+                <p className="text-rose-400 text-xl font-semibold">✗ Wrong</p>
+                <p className="text-gray-100 text-lg">
+                  The word is{' '}
+                  <span className="font-bold text-rose-300">{PEGS[n]}</span>
+                </p>
+              </>
+            )}
+          </div>
 
-        {state === 'wrong' && (
-          <button
-            onClick={advance}
-            className="px-8 py-3 rounded-lg bg-amber-500 text-gray-950 font-semibold hover:bg-amber-400 transition-colors text-lg w-full sm:w-auto max-w-md"
-          >
-            Next
-          </button>
-        )}
+          {state === 'asking' && (
+            <button
+              onClick={submit}
+              disabled={guess.trim() === ''}
+              className="w-full px-8 py-3 rounded-lg bg-amber-500 text-gray-950 font-semibold hover:bg-amber-400 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors text-lg"
+            >
+              Check
+            </button>
+          )}
+
+          {state === 'wrong' && (
+            <button
+              onClick={advance}
+              className="w-full px-8 py-3 rounded-lg bg-amber-500 text-gray-950 font-semibold hover:bg-amber-400 transition-colors text-lg"
+            >
+              Next
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
