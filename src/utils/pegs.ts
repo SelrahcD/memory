@@ -23,17 +23,17 @@ export const PEGS: readonly string[] = [
   'ticket',   // 17  (English: dog)
   'dauphin',  // 18  (English: TV)
   'tuba',     // 19
-  'nose',     // 20
-  'net',      // 21
-  'nun',      // 22
+  'nasse',    // 20  (English: nose)
+  'Nantes',   // 21  (English: net)
+  'nonne',    // 22  (English: nun)
   'Nemo',     // 23
   'Nero',     // 24  (Roman emperor)
-  'nail',     // 25
+  'Noël',     // 25  (English: nail)
   'nacho',    // 26
-  'ink',      // 27
-  'nymphe',   // 28
-  'NBA',      // 29
-  'mousse',   // 30
+  'Nagui',    // 27  (English: ink)
+  'navet',    // 28  (English: knife)
+  'nappe',    // 29  (English: NBA/basketball)
+  'maison',   // 30  (English: mouse)
   'mat',      // 31
   'moine',    // 32
   'momie',    // 33
