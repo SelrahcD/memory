@@ -3,25 +3,25 @@
 // Rule when the source entry had multiple options: prefer the French word.
 // When several French options existed, the last (most-recent) was kept.
 export const PEGS: readonly string[] = [
-  'sauce',    // 00
+  'oasis',    // 00  (English: sauce)
   'assiette', // 01
   'cygne',    // 02
   'sumo',     // 03
-  'sir',      // 04  (knight)
-  'soul',     // 05
+  'sœur',     // 04  (English: sir/knight)
+  'sel',      // 05  (English: soul)
   'sushi',    // 06
   'ski',      // 07
   'sofa',     // 08
-  'soupe',    // 09
+  'espion',   // 09  (English: soap)
   'tasse',    // 10
-  'dad',      // 11
-  'DNA',      // 12  (double helix)
-  'Adam',     // 13
+  'tête',     // 11  (English: dad)
+  'tonneau',  // 12  (English: DNA/double helix)
+  'diamant',  // 13  (English: Adam)
   'Thor',     // 14
   'Dalí',     // 15
-  'DJ',       // 16
-  'dog',      // 17
-  'TV',       // 18
+  'donjon',   // 16  (English: DJ)
+  'ticket',   // 17  (English: dog)
+  'dauphin',  // 18  (English: TV)
   'tuba',     // 19
   'nose',     // 20
   'net',      // 21
@@ -81,7 +81,7 @@ export const PEGS: readonly string[] = [
   'koala',    // 75
   'quiche',   // 76
   'cake',     // 77
-  'coffee',   // 78
+  'café',     // 78
   'cube',     // 79  (Rubik's)
   'vase',     // 80
   'foot',     // 81
