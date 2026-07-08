@@ -4,7 +4,11 @@ import './index.css'
 import App from './App'
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // Registration failures shouldn't break the app.
+    });
+  });
 }
 
 createRoot(document.getElementById('root')!).render(
