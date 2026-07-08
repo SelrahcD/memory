@@ -86,7 +86,7 @@ export const PEGS: readonly string[] = [
   'vase',     // 80
   'foot',     // 81
   'fan',      // 82
-  'foam',     // 83
+  'femme',    // 83
   'phare',    // 84
   'fly',      // 85
   'fish',     // 86
