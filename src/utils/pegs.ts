@@ -62,7 +62,7 @@ export const PEGS: readonly string[] = [
   'leech',    // 56
   'leek',     // 57
   'lava',     // 58
-  'lip',      // 59
+  'lampe',    // 59
   'cheese',   // 60
   'cheetah',  // 61
   'genie',    // 62
