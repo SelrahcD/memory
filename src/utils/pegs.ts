@@ -69,7 +69,7 @@ export const PEGS: readonly string[] = [
   'jam',      // 63
   'cherry',   // 64
   'chilli',   // 65
-  'yo-yo',    // 66
+  'juge',     // 66
   'chick',    // 67
   'chef',     // 68
   'chapeau',  // 69
