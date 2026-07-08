@@ -34,7 +34,7 @@ export const PEGS: readonly string[] = [
   'navet',    // 28  (English: knife)
   'nappe',    // 29  (English: NBA/basketball)
   'maison',   // 30  (English: mouse)
-  'mat',      // 31
+  'mouton',   // 31  (English: mat)
   'moine',    // 32
   'momie',    // 33
   'Mario',    // 34
