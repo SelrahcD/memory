@@ -60,7 +60,7 @@ export const PEGS: readonly string[] = [
   'Hillary',  // 54  (Clinton)
   'Lily',     // 55
   'leech',    // 56
-  'leek',     // 57
+  'lac',      // 57
   'lava',     // 58
   'lampe',    // 59
   'cheese',   // 60
