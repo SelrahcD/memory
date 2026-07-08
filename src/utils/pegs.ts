@@ -45,7 +45,7 @@ export const PEGS: readonly string[] = [
   'myope',    // 39
   'rose',     // 40
   'radio',    // 41
-  'rain',     // 42  (umbrella)
+  'reine',    // 42
   'rhum',     // 43
   'erreur',   // 44
   'Ariel',    // 45  (the little mermaid)
