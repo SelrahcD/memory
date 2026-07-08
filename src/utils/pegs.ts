@@ -42,7 +42,7 @@ export const PEGS: readonly string[] = [
   'mouche',   // 36
   'Mickey',   // 37
   'mafia',    // 38
-  'MP3',      // 39
+  'myope',    // 39
   'rose',     // 40
   'radio',    // 41
   'rain',     // 42  (umbrella)
