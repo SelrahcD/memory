@@ -45,7 +45,7 @@ export const PEGS: readonly string[] = [
   'myope',    // 39
   'rose',     // 40
   'radio',    // 41
-  'rain',     // 42  (umbrella)
+  'reine',    // 42
   'rhum',     // 43
   'erreur',   // 44
   'Ariel',    // 45  (the little mermaid)
@@ -60,16 +60,16 @@ export const PEGS: readonly string[] = [
   'Hillary',  // 54  (Clinton)
   'Lily',     // 55
   'leech',    // 56
-  'leek',     // 57
+  'lac',      // 57
   'lava',     // 58
-  'lip',      // 59
+  'lampe',    // 59
   'cheese',   // 60
   'cheetah',  // 61
   'genie',    // 62
   'jam',      // 63
   'cherry',   // 64
   'chilli',   // 65
-  'yo-yo',    // 66
+  'juge',     // 66
   'chick',    // 67
   'chef',     // 68
   'chapeau',  // 69
@@ -86,7 +86,7 @@ export const PEGS: readonly string[] = [
   'vase',     // 80
   'foot',     // 81
   'fan',      // 82
-  'foam',     // 83
+  'femme',    // 83
   'phare',    // 84
   'fly',      // 85
   'fish',     // 86
@@ -99,7 +99,7 @@ export const PEGS: readonly string[] = [
   'pomme',    // 93
   'beer',     // 94
   'apple',    // 95
-  'bush',     // 96
+  'bougie',   // 96
   'book',     // 97
   'beef',     // 98
   'pope',     // 99
