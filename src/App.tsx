@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Home from './pages/Home';
 import PegList from './pages/PegList';
 import PegQuiz from './pages/PegQuiz';
+import PiValidator from './pages/PiValidator';
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           />
           <Route path="/peg-list" element={<PegList />} />
           <Route path="/peg-quiz" element={<PegQuiz />} />
+          <Route path="/pi-validator" element={<PiValidator />} />
         </Routes>
       </div>
     </BrowserRouter>
