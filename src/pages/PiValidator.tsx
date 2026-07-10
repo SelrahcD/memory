@@ -81,8 +81,8 @@ export default function PiValidator() {
   const borderFor = (index: number): string => {
     if (!validated) {
       return index === activeIndex
-        ? 'border-amber-500'
-        : 'border-gray-700 focus:border-amber-500';
+        ? 'border-orange-500'
+        : 'border-gray-700 focus:border-orange-500';
     }
     return isDigitCorrect(digits[index], index)
       ? 'border-emerald-500 bg-emerald-500/10 text-emerald-300'
@@ -136,12 +136,9 @@ export default function PiValidator() {
             )}
           </div>
 
-          {/* Film-strip of decimal inputs. The strip slides so the active cell
-              stays centered; sprocket-hole bands sell the reel-of-film look. */}
-          <div className="relative w-full overflow-hidden py-3 film-strip">
-            {/* Center frame marker */}
-            <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-24 rounded-lg border-2 border-amber-500/40" />
-
+          {/* Decimal inputs. The strip slides so the active cell stays
+              centered and earlier decimals scroll off to the left. */}
+          <div className="relative w-full overflow-hidden">
             <div className="relative h-24">
               <div
                 className="absolute top-0 left-1/2 flex gap-3 transition-transform duration-300 ease-out"
