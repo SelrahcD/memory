@@ -109,14 +109,14 @@ export default function PiValidator() {
             <span className="text-gray-100 font-semibold tabular-nums">
               {filledCount}
             </span>{' '}
-            décimale{filledCount > 1 ? 's' : ''} / {PI_LENGTH}
+            decimal{filledCount === 1 ? '' : 's'} / {PI_LENGTH}
             {validated && (
               <>
                 {' · '}
                 <span className="text-emerald-400 font-semibold tabular-nums">
                   {correctCount}
                 </span>{' '}
-                correcte{correctCount > 1 ? 's' : ''}
+                correct
               </>
             )}
           </div>
@@ -136,7 +136,7 @@ export default function PiValidator() {
                 onKeyDown={(e) => handleKeyDown(i, e)}
                 onFocus={(e) => e.target.select()}
                 autoComplete="off"
-                aria-label={`Décimale ${i + 1}`}
+                aria-label={`Decimal ${i + 1}`}
                 data-testid={`pi-input-${i}`}
                 className={`w-10 h-12 bg-gray-900/60 text-gray-100 text-xl text-center rounded-lg border-2 outline-none transition-colors ${borderFor(
                   i,
@@ -151,13 +151,13 @@ export default function PiValidator() {
               onClick={validate}
               className="px-8 py-3 rounded-lg bg-amber-500 text-gray-950 font-semibold hover:bg-amber-400 transition-colors text-lg"
             >
-              Valider
+              Check
             </button>
             <button
               onClick={reset}
               className="px-6 py-3 rounded-lg border-2 border-gray-700 text-gray-300 font-semibold hover:border-gray-500 hover:text-gray-100 transition-colors text-lg"
             >
-              Effacer
+              Clear
             </button>
           </div>
         </div>
