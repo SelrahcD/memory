@@ -1,6 +1,15 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { PI_DIGITS, PI_LENGTH, isDigitCorrect } from '../utils/pi';
+
+// Cell geometry (px): input is w-14 (56) and cells sit 12px apart.
+const CELL_W = 56;
+const CELL_FULL = CELL_W + 12;
+// Only render this many cells on each side of the active one — keeps the DOM
+// light (≤21 inputs) so the slide stays fluid instead of moving 100 nodes.
+const WINDOW = 10;
+// px of wheel travel that advances the selection by one cell.
+const WHEEL_STEP = 40;
 
 export default function PiValidator() {
   const [digits, setDigits] = useState<string[]>(() =>
@@ -9,22 +18,13 @@ export default function PiValidator() {
   const [validated, setValidated] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  // Keep the active input centered in the scroll area, while still leaving the
-  // row free for the user to scroll left/right by hand (e.g. when reviewing).
-  useEffect(() => {
-    inputRefs.current[activeIndex]?.scrollIntoView({
-      inline: 'center',
-      block: 'nearest',
-    });
-  }, [activeIndex]);
+  const wheelAcc = useRef(0);
 
   const filledCount = digits.filter((d) => d !== '').length;
 
   const focusInput = useCallback((index: number) => {
-    // preventScroll: let our own centering effect drive the scroll position
-    // instead of the browser scrolling the focused input to the nearest edge.
+    // preventScroll: the track is centered by transform, not by the browser
+    // scrolling the focused input into view.
     inputRefs.current[index]?.focus({ preventScroll: true });
   }, []);
 
@@ -70,6 +70,22 @@ export default function PiValidator() {
     }
   };
 
+  // Let a mouse wheel / trackpad move through the decimals (handy for review),
+  // stepping the selection cell by cell without a native scrollbar.
+  const handleWheel = (e: React.WheelEvent) => {
+    const raw =
+      Math.abs(e.deltaX) >= Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (!raw) return;
+    wheelAcc.current += raw;
+    let steps = Math.trunc(wheelAcc.current / WHEEL_STEP);
+    if (steps === 0) return;
+    wheelAcc.current -= steps * WHEEL_STEP;
+    // Never jump past the rendered window so the target input still has a ref.
+    steps = Math.max(-WINDOW, Math.min(WINDOW, steps));
+    const target = Math.max(0, Math.min(PI_LENGTH - 1, activeIndex + steps));
+    if (target !== activeIndex) focusInput(target);
+  };
+
   const validate = () => setValidated(true);
 
   const reset = () => {
@@ -93,6 +109,13 @@ export default function PiValidator() {
       ? 'border-emerald-500 bg-emerald-500/10 text-emerald-300'
       : 'border-rose-500 bg-rose-500/10 text-rose-300';
   };
+
+  // Slide the track so the active cell's center lands at the container center.
+  const trackShift = -(activeIndex * CELL_FULL + CELL_W / 2);
+  const lo = Math.max(0, activeIndex - WINDOW);
+  const hi = Math.min(PI_LENGTH - 1, activeIndex + WINDOW);
+  const windowIndices: number[] = [];
+  for (let i = lo; i <= hi; i++) windowIndices.push(i);
 
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden">
@@ -138,48 +161,51 @@ export default function PiValidator() {
             )}
           </div>
 
-          {/* Decimal inputs in a horizontally scrollable row. The active input
-              is auto-centered, and the user can scroll left/right to review all
-              of them. The 50% side padding lets the first/last cells reach the
-              center too. */}
-          <div
-            ref={scrollRef}
-            className="w-full overflow-x-auto overscroll-x-contain py-3"
-          >
-            <div className="flex gap-3 w-max px-[50%]">
-              {digits.map((digit, i) => {
-                const wrong = validated && !isDigitCorrect(digit, i);
-                return (
-                  <div
-                    key={i}
-                    className="flex flex-col items-center gap-1 w-14 shrink-0"
-                  >
-                    <input
-                      ref={(el) => {
-                        inputRefs.current[i] = el;
-                      }}
-                      type="text"
-                      inputMode="numeric"
-                      value={digit}
-                      onChange={(e) => handleChange(i, e)}
-                      onKeyDown={(e) => handleKeyDown(i, e)}
-                      onFocus={() => setActiveIndex(i)}
-                      autoComplete="off"
-                      autoFocus={i === 0}
-                      aria-label={`Decimal ${i + 1}`}
-                      data-testid={`pi-input-${i}`}
-                      className={`w-14 h-14 bg-gray-900/60 text-gray-100 text-2xl text-center rounded-lg border-2 outline-none caret-transparent transition-colors ${borderFor(
-                        i,
-                      )}`}
-                    />
-                    {/* Reserve the slot so the row height never jumps; show the
-                        correct decimal under a wrong answer. */}
-                    <span className="h-5 text-sm font-semibold text-emerald-400 tabular-nums">
-                      {wrong ? PI_DIGITS[i] : ''}
-                    </span>
-                  </div>
-                );
-              })}
+          {/* Decimal inputs on a sliding track. Only a window of cells around
+              the active one is rendered; the track translates so the active
+              input stays centered, and a wheel moves through the decimals. */}
+          <div className="w-full overflow-hidden" onWheel={handleWheel}>
+            <div className="relative h-24">
+              <div
+                className="absolute top-0 left-1/2 transition-transform duration-200 ease-out"
+                style={{ transform: `translateX(${trackShift}px)` }}
+              >
+                {windowIndices.map((i) => {
+                  const digit = digits[i];
+                  const wrong = validated && !isDigitCorrect(digit, i);
+                  return (
+                    <div
+                      key={i}
+                      className="absolute top-0 flex flex-col items-center gap-1"
+                      style={{ left: i * CELL_FULL, width: CELL_W }}
+                    >
+                      <input
+                        ref={(el) => {
+                          inputRefs.current[i] = el;
+                        }}
+                        type="text"
+                        inputMode="numeric"
+                        value={digit}
+                        onChange={(e) => handleChange(i, e)}
+                        onKeyDown={(e) => handleKeyDown(i, e)}
+                        onFocus={() => setActiveIndex(i)}
+                        autoComplete="off"
+                        autoFocus={i === 0}
+                        aria-label={`Decimal ${i + 1}`}
+                        data-testid={`pi-input-${i}`}
+                        className={`w-14 h-14 bg-gray-900/60 text-gray-100 text-2xl text-center rounded-lg border-2 outline-none caret-transparent transition-colors ${borderFor(
+                          i,
+                        )}`}
+                      />
+                      {/* Reserve the slot so the row height never jumps; show
+                          the correct decimal under a wrong answer. */}
+                      <span className="h-5 text-sm font-semibold text-emerald-400 tabular-nums">
+                        {wrong ? PI_DIGITS[i] : ''}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
