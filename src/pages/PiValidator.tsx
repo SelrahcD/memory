@@ -168,7 +168,7 @@ export default function PiValidator() {
                       autoFocus={i === 0}
                       aria-label={`Decimal ${i + 1}`}
                       data-testid={`pi-input-${i}`}
-                      className={`w-14 h-14 bg-gray-900/60 text-gray-100 text-2xl text-center rounded-lg border-2 outline-none transition-colors ${borderFor(
+                      className={`w-14 h-14 bg-gray-900/60 text-gray-100 text-2xl text-center rounded-lg border-2 outline-none caret-transparent transition-colors ${borderFor(
                         i,
                       )}`}
                     />
@@ -185,12 +185,14 @@ export default function PiValidator() {
 
           {/* Actions */}
           <div className="flex gap-3">
-            <button
-              onClick={validate}
-              className="px-8 py-3 rounded-lg bg-amber-500 text-gray-950 font-semibold hover:bg-amber-400 transition-colors text-lg"
-            >
-              Check
-            </button>
+            {!validated && (
+              <button
+                onClick={validate}
+                className="px-8 py-3 rounded-lg bg-amber-500 text-gray-950 font-semibold hover:bg-amber-400 transition-colors text-lg"
+              >
+                Check
+              </button>
+            )}
             <button
               onClick={reset}
               className="px-6 py-3 rounded-lg border-2 border-gray-700 text-gray-300 font-semibold hover:border-gray-500 hover:text-gray-100 transition-colors text-lg"
