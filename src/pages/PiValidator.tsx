@@ -1,12 +1,6 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { PI_DIGITS, PI_LENGTH, isDigitCorrect } from '../utils/pi';
-
-// Film-strip geometry: each decimal lives in a fixed-width cell so we can slide
-// the whole strip left/right by a known amount to keep the active cell centered.
-const CELL_W = 56; // px — matches w-14
-const CELL_GAP = 12; // px — matches gap-3
-const CELL_FULL = CELL_W + CELL_GAP;
 
 export default function PiValidator() {
   const [digits, setDigits] = useState<string[]>(() =>
@@ -15,12 +9,23 @@ export default function PiValidator() {
   const [validated, setValidated] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Keep the active input centered in the scroll area, while still leaving the
+  // row free for the user to scroll left/right by hand (e.g. when reviewing).
+  useEffect(() => {
+    inputRefs.current[activeIndex]?.scrollIntoView({
+      inline: 'center',
+      block: 'nearest',
+    });
+  }, [activeIndex]);
 
   const filledCount = digits.filter((d) => d !== '').length;
 
   const focusInput = useCallback((index: number) => {
-    inputRefs.current[index]?.focus();
-    inputRefs.current[index]?.select();
+    // preventScroll: let our own centering effect drive the scroll position
+    // instead of the browser scrolling the focused input to the nearest edge.
+    inputRefs.current[index]?.focus({ preventScroll: true });
   }, []);
 
   const handleChange = (
@@ -89,9 +94,6 @@ export default function PiValidator() {
       : 'border-rose-500 bg-rose-500/10 text-rose-300';
   };
 
-  // Slide the strip so the center of the active cell sits at the container center.
-  const stripOffset = -(activeIndex * CELL_FULL + CELL_W / 2);
-
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden">
       {/* Compact header with back link */}
@@ -136,51 +138,48 @@ export default function PiValidator() {
             )}
           </div>
 
-          {/* Decimal inputs. The strip slides so the active cell stays
-              centered and earlier decimals scroll off to the left. */}
-          <div className="relative w-full overflow-hidden">
-            <div className="relative h-24">
-              <div
-                className="absolute top-0 left-1/2 flex gap-3 transition-transform duration-300 ease-out"
-                style={{ transform: `translateX(${stripOffset}px)` }}
-              >
-                {digits.map((digit, i) => {
-                  const wrong = validated && !isDigitCorrect(digit, i);
-                  return (
-                    <div
-                      key={i}
-                      className="flex flex-col items-center gap-1 w-14 shrink-0"
-                    >
-                      <input
-                        ref={(el) => {
-                          inputRefs.current[i] = el;
-                        }}
-                        type="text"
-                        inputMode="numeric"
-                        value={digit}
-                        onChange={(e) => handleChange(i, e)}
-                        onKeyDown={(e) => handleKeyDown(i, e)}
-                        onFocus={(e) => {
-                          setActiveIndex(i);
-                          e.target.select();
-                        }}
-                        autoComplete="off"
-                        autoFocus={i === 0}
-                        aria-label={`Decimal ${i + 1}`}
-                        data-testid={`pi-input-${i}`}
-                        className={`w-14 h-14 bg-gray-900/60 text-gray-100 text-2xl text-center rounded-lg border-2 outline-none transition-colors ${borderFor(
-                          i,
-                        )}`}
-                      />
-                      {/* Reserve the slot so the strip height never jumps; show
-                          the correct decimal under a wrong answer. */}
-                      <span className="h-5 text-sm font-semibold text-emerald-400 tabular-nums">
-                        {wrong ? PI_DIGITS[i] : ''}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
+          {/* Decimal inputs in a horizontally scrollable row. The active input
+              is auto-centered, and the user can scroll left/right to review all
+              of them. The 50% side padding lets the first/last cells reach the
+              center too. */}
+          <div
+            ref={scrollRef}
+            className="w-full overflow-x-auto overscroll-x-contain py-3"
+          >
+            <div className="flex gap-3 w-max px-[50%]">
+              {digits.map((digit, i) => {
+                const wrong = validated && !isDigitCorrect(digit, i);
+                return (
+                  <div
+                    key={i}
+                    className="flex flex-col items-center gap-1 w-14 shrink-0"
+                  >
+                    <input
+                      ref={(el) => {
+                        inputRefs.current[i] = el;
+                      }}
+                      type="text"
+                      inputMode="numeric"
+                      value={digit}
+                      onChange={(e) => handleChange(i, e)}
+                      onKeyDown={(e) => handleKeyDown(i, e)}
+                      onFocus={() => setActiveIndex(i)}
+                      autoComplete="off"
+                      autoFocus={i === 0}
+                      aria-label={`Decimal ${i + 1}`}
+                      data-testid={`pi-input-${i}`}
+                      className={`w-14 h-14 bg-gray-900/60 text-gray-100 text-2xl text-center rounded-lg border-2 outline-none transition-colors ${borderFor(
+                        i,
+                      )}`}
+                    />
+                    {/* Reserve the slot so the row height never jumps; show the
+                        correct decimal under a wrong answer. */}
+                    <span className="h-5 text-sm font-semibold text-emerald-400 tabular-nums">
+                      {wrong ? PI_DIGITS[i] : ''}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
