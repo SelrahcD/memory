@@ -10,3 +10,35 @@ body {
   padding-right: env(safe-area-inset-right);
   padding-bottom: env(safe-area-inset-bottom);
 }
+
+/* Cinema film-strip: dark perforated bands along the top and bottom edges,
+   with a soft fade on the left/right so cells slide in and out of view. */
+.film-strip {
+  --hole: #030712; /* gray-950 */
+  --band: #111827; /* gray-900 */
+  background-color: var(--band);
+  background-image:
+    radial-gradient(circle at center, var(--hole) 3px, transparent 3.5px),
+    radial-gradient(circle at center, var(--hole) 3px, transparent 3.5px);
+  background-repeat: repeat-x;
+  background-size: 16px 12px;
+  background-position:
+    0 4px,
+    0 calc(100% - 4px);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
