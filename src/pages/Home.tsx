@@ -18,6 +18,12 @@ export default function Home() {
           description="Type the word that goes with a random number"
           icon="🎯"
         />
+        <ToolCard
+          to="/pi-validator"
+          title="Pi Validator"
+          description="Type the decimals of π and check which ones are right"
+          icon="🥧"
+        />
       </div>
     </div>
   );
