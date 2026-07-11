@@ -7,7 +7,7 @@ export const PEGS: readonly string[] = [
   'assiette', // 01
   'cygne',    // 02
   'sumo',     // 03
-  'sœur',     // 04  (English: sir/knight)
+  'Zorro',    // 04
   'sel',      // 05  (English: soul)
   'sushi',    // 06
   'ski',      // 07
