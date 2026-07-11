@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { PEGS, formatNumber } from '../utils/pegs';
+import { PLAYLISTS } from '../utils/playlists';
 
 export default function PegList() {
+  const [playlistId, setPlaylistId] = useState(PLAYLISTS[0].id);
+  const playlist = PLAYLISTS.find((p) => p.id === playlistId) ?? PLAYLISTS[0];
+
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden">
       {/* Compact header with back link */}
@@ -15,24 +19,52 @@ export default function PegList() {
         <span className="text-gray-500 text-sm">Peg List</span>
       </div>
 
+      {/* Playlist selector */}
+      <div className="px-4 pb-2 flex justify-center">
+        <div
+          role="tablist"
+          aria-label="Playlist"
+          className="inline-flex gap-1 rounded-xl bg-gray-900/60 p-1"
+        >
+          {PLAYLISTS.map((p) => {
+            const active = p.id === playlist.id;
+            return (
+              <button
+                key={p.id}
+                role="tab"
+                aria-selected={active}
+                onClick={() => setPlaylistId(p.id)}
+                className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  active
+                    ? 'bg-amber-500 text-gray-950'
+                    : 'text-gray-400 hover:text-gray-100'
+                }`}
+              >
+                {p.name}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Scrollable list */}
       <div className="flex-1 min-h-0 overflow-y-auto">
         <ul className="max-w-md mx-auto w-full">
-          {PEGS.map((word, i) => {
+          {playlist.entries.map((entry, i) => {
             // Per-row background striping, plus a 3px left border whose color
-            // alternates per decade so each block of 10 is delimited.
-            const evenDecade = Math.floor(i / 10) % 2 === 0;
+            // alternates every 10 rows so each block is delimited.
+            const evenBlock = Math.floor(i / 10) % 2 === 0;
             return (
               <li
-                key={i}
+                key={entry.key}
                 className={`flex items-baseline gap-6 py-3 px-4 border-l-[3px] even:bg-gray-900/40 ${
-                  evenDecade ? 'border-sky-500' : 'border-amber-500'
+                  evenBlock ? 'border-sky-500' : 'border-amber-500'
                 }`}
               >
                 <span className="text-gray-500 tabular-nums text-base w-8">
-                  {formatNumber(i)}
+                  {entry.key}
                 </span>
-                <span className="text-gray-100 text-lg">{word}</span>
+                <span className="text-gray-100 text-lg">{entry.value}</span>
               </li>
             );
           })}
