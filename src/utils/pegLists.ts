@@ -1,30 +1,30 @@
-// Playlists shown in the Peg List tool.
-// A playlist is an ordered set of key→value pairs the user practises.
-// The historical number-peg list (00..99) lives in ./pegs; other playlists
+// Peg lists shown in the Peg List tool.
+// A peg list is an ordered set of key→value pairs the user practises.
+// The historical number-peg list (00..99) lives in ./pegs; other peg lists
 // (e.g. the A..Z animals) are defined here.
 import { PEGS, formatNumber } from './pegs';
 
-export interface PlaylistEntry {
+export interface PegListEntry {
   /** Short label shown in the left column (e.g. "07" or "A"). */
   key: string;
   /** The associated word (e.g. "ski" or "Âne"). */
   value: string;
 }
 
-export interface Playlist {
+export interface PegList {
   id: string;
   name: string;
-  entries: readonly PlaylistEntry[];
+  entries: readonly PegListEntry[];
 }
 
 // The existing 00..99 number pegs, adapted to the generic entry shape.
-const numberEntries: readonly PlaylistEntry[] = PEGS.map((word, i) => ({
+const numberEntries: readonly PegListEntry[] = PEGS.map((word, i) => ({
   key: formatNumber(i),
   value: word,
 }));
 
 // One French animal per letter, A→Z.
-const animalEntries: readonly PlaylistEntry[] = [
+const animalEntries: readonly PegListEntry[] = [
   { key: 'A', value: 'Âne' },
   { key: 'B', value: 'Baleine' },
   { key: 'C', value: 'Chat' },
@@ -53,7 +53,7 @@ const animalEntries: readonly PlaylistEntry[] = [
   { key: 'Z', value: 'Zèbre' },
 ];
 
-export const PLAYLISTS: readonly Playlist[] = [
+export const PEG_LISTS: readonly PegList[] = [
   { id: 'numbers', name: '00–100', entries: numberEntries },
   { id: 'animals', name: 'Animaux', entries: animalEntries },
 ];
