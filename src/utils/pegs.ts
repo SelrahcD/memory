@@ -30,8 +30,8 @@ export const PEGS: readonly string[] = [
   'Nero',     // 24  (Roman emperor)
   'Noël',     // 25  (English: nail)
   'nuage',    // 26
-  'Nagui',    // 27  (English: ink)
-  'navet',    // 28  (English: knife)
+  'nougat',   // 27  (English: ink)
+  'nymphe',   // 28  (English: knife)
   'nappe',    // 29  (English: NBA/basketball)
   'maison',   // 30  (English: mouse)
   'mouton',   // 31  (English: mat)
