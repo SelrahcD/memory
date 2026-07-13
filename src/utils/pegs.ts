@@ -124,10 +124,17 @@ export function isCorrect(guess: string, n: PegNumber): boolean {
   return normalize(guess) === normalize(PEGS[n]);
 }
 
-export function randomPegNumber(exclude?: PegNumber): PegNumber {
+export const MAX_PEG = PEGS.length - 1;
+
+// Draw a peg number in the inclusive range [0, max]. `max` is clamped to the
+// available pegs. When the range has more than one value, `exclude` is avoided
+// so the same number isn't drawn twice in a row.
+export function randomPegNumber(exclude?: PegNumber, max: PegNumber = MAX_PEG): PegNumber {
+  const upper = Math.min(Math.max(Math.floor(max), 0), MAX_PEG);
+  const canExclude = exclude !== undefined && upper > 0;
   let n: PegNumber;
   do {
-    n = Math.floor(Math.random() * PEGS.length);
-  } while (exclude !== undefined && n === exclude);
+    n = Math.floor(Math.random() * (upper + 1));
+  } while (canExclude && n === exclude);
   return n;
 }
