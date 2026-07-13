@@ -50,8 +50,8 @@ export const PEGS: readonly string[] = [
   'erreur',   // 44
   'Ariel',    // 45  (the little mermaid)
   'ruche',    // 46
-  'Rocky',    // 47
-  'roof',     // 48
+  'requin',   // 47
+  'rave',     // 48
   'robot',    // 49
   'lasso',    // 50
   'lady',     // 51
