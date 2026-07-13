@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import {
   PEGS,
+  MAX_PEG,
   formatNumber,
   isCorrect,
   randomPegNumber,
@@ -13,18 +14,38 @@ type State = 'asking' | 'correct' | 'wrong';
 const AUTO_ADVANCE_MS = 700;
 
 export default function PegQuiz() {
-  const [n, setN] = useState<PegNumber>(() => randomPegNumber());
+  const [maxN, setMaxN] = useState<PegNumber>(MAX_PEG);
+  const [showOptions, setShowOptions] = useState(false);
+  const [n, setN] = useState<PegNumber>(() => randomPegNumber(undefined, MAX_PEG));
   const [state, setState] = useState<State>('asking');
   const [guess, setGuess] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const advance = useCallback(() => {
-    setN((prev) => randomPegNumber(prev));
+    setN((prev) => randomPegNumber(prev, maxN));
     setState('asking');
     setGuess('');
     // Refocus after React updates the DOM.
     setTimeout(() => inputRef.current?.focus(), 0);
-  }, []);
+  }, [maxN]);
+
+  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    if (raw === '') {
+      setMaxN(0);
+      return;
+    }
+    const parsed = Number.parseInt(raw, 10);
+    if (Number.isNaN(parsed)) return;
+    const next = Math.min(Math.max(parsed, 0), MAX_PEG);
+    setMaxN(next);
+    // If the current question falls outside the new range, draw a fresh one so
+    // we never quiz a number the user opted out of.
+    if (state === 'asking' && n > next) {
+      setN(randomPegNumber(undefined, next));
+      setGuess('');
+    }
+  };
 
   const submit = useCallback(() => {
     if (state !== 'asking') return;
@@ -146,6 +167,37 @@ export default function PegQuiz() {
             >
               Next
             </button>
+          )}
+        </div>
+
+        {/* Options — discreet toggle sitting below the card. */}
+        <div className="w-full max-w-md flex flex-col items-center">
+          <button
+            type="button"
+            onClick={() => setShowOptions((v) => !v)}
+            aria-expanded={showOptions}
+            className="text-gray-600 hover:text-gray-400 text-xs uppercase tracking-wider transition-colors py-1"
+          >
+            {showOptions ? 'Hide options ▲' : 'Options ▾'}
+          </button>
+
+          {showOptions && (
+            <div className="w-full mt-2 rounded-xl border border-gray-800 bg-gray-900/40 px-4 py-3 flex items-center justify-between gap-4">
+              <label htmlFor="max-peg" className="text-gray-400 text-sm">
+                Quiz up to
+              </label>
+              <input
+                id="max-peg"
+                type="number"
+                inputMode="numeric"
+                min={0}
+                max={MAX_PEG}
+                value={maxN}
+                onChange={handleMaxChange}
+                data-testid="max-input"
+                className="w-20 bg-gray-900/60 text-gray-100 text-center rounded-lg border border-gray-700 focus:border-amber-500 px-2 py-1.5 outline-none transition-colors tabular-nums"
+              />
+            </div>
           )}
         </div>
       </div>
