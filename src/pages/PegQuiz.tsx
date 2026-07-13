@@ -12,11 +12,25 @@ import {
 type State = 'asking' | 'correct' | 'wrong';
 
 const AUTO_ADVANCE_MS = 700;
+const MAX_STORAGE_KEY = 'pegQuiz.maxN';
+
+function loadStoredMax(): PegNumber {
+  try {
+    const raw = localStorage.getItem(MAX_STORAGE_KEY);
+    if (raw === null) return MAX_PEG;
+    const parsed = Number.parseInt(raw, 10);
+    if (Number.isNaN(parsed)) return MAX_PEG;
+    return Math.min(Math.max(parsed, 0), MAX_PEG);
+  } catch {
+    // localStorage can throw (private mode, disabled) — fall back to the full range.
+    return MAX_PEG;
+  }
+}
 
 export default function PegQuiz() {
-  const [maxN, setMaxN] = useState<PegNumber>(MAX_PEG);
+  const [maxN, setMaxN] = useState<PegNumber>(loadStoredMax);
   const [showOptions, setShowOptions] = useState(false);
-  const [n, setN] = useState<PegNumber>(() => randomPegNumber(undefined, MAX_PEG));
+  const [n, setN] = useState<PegNumber>(() => randomPegNumber(undefined, loadStoredMax()));
   const [state, setState] = useState<State>('asking');
   const [guess, setGuess] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -64,6 +78,15 @@ export default function PegQuiz() {
   useEffect(() => {
     if (state === 'wrong') inputRef.current?.focus();
   }, [state]);
+
+  // Persist the selected range so it survives reloads.
+  useEffect(() => {
+    try {
+      localStorage.setItem(MAX_STORAGE_KEY, String(maxN));
+    } catch {
+      // Ignore storage failures (private mode, disabled) — the setting just won't persist.
+    }
+  }, [maxN]);
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (state === 'asking' && e.key === 'Enter') {
