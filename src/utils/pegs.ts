@@ -57,7 +57,7 @@ export const PEGS: readonly string[] = [
   'lutin',     // 51
   'lionne',   // 52
   'lama',     // 53
-  'Loire',  // 54  (Clinton)
+  'lard',  // 54
   'Lily',     // 55
   'luge',    // 56
   'lac',      // 57
