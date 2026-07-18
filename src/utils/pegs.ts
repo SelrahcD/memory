@@ -61,7 +61,7 @@ export const PEGS: readonly string[] = [
   'Lily',     // 55
   'leech',    // 56
   'lac',      // 57
-  'lava',     // 58
+  'éléphant',     // 58
   'lampe',    // 59
   'cheese',   // 60
   'cheetah',  // 61
@@ -98,11 +98,11 @@ export const PEGS: readonly string[] = [
   'piano',    // 92
   'pomme',    // 93
   'beer',     // 94
-  'apple',    // 95
+  'bière',    // 95
   'bougie',   // 96
-  'book',     // 97
-  'beef',     // 98
-  'pope',     // 99
+  'bague',    // 97
+  'boeuf',    // 98
+  'bébé',     // 99
 ] as const;
 
 export type PegNumber = number;
