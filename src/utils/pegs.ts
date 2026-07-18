@@ -54,16 +54,16 @@ export const PEGS: readonly string[] = [
   'rave',     // 48
   'robot',    // 49
   'lasso',    // 50
-  'lady',     // 51
+  'lutin',     // 51
   'lionne',   // 52
   'lama',     // 53
-  'Hillary',  // 54  (Clinton)
+  'Loire',  // 54  (Clinton)
   'Lily',     // 55
-  'leech',    // 56
+  'luge',    // 56
   'lac',      // 57
   'éléphant',     // 58
   'lampe',    // 59
-  'cheese',   // 60
+  'chaise',   // 60
   'cheetah',  // 61
   'genie',    // 62
   'jam',      // 63
