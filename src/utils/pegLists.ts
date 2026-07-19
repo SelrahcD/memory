@@ -53,7 +53,21 @@ const animalEntries: readonly PegListEntry[] = [
   { key: 'Z', value: 'Zèbre' },
 ];
 
+const numberShape: readonly PegListEntry[] = [
+  { key: '0', value: 'Œuf' },
+  { key: '1', value: 'Bougie' },
+  { key: '2', value: 'Cygne' },
+  { key: '3', value: 'Trident' },
+  { key: '4', value: 'Bateau à voile' },
+  { key: '5', value: 'Hameçon' },
+  { key: '6', value: 'Club de golf' },
+  { key: '7', value: 'Hache' },
+  { key: '8', value: 'Bonhomme de neige' },
+  { key: '9', value: 'Ballon accroché à une ficelle' },
+];
+
 export const PEG_LISTS: readonly PegList[] = [
   { id: 'numbers', name: '00–100', entries: numberEntries },
   { id: 'animals', name: 'Animaux', entries: animalEntries },
+  { id: 'shape', name: 'Number shapes', entries: numberShape },
 ];
