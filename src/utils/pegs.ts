@@ -24,7 +24,7 @@ export const PEGS: readonly string[] = [
   'dauphin',  // 18  (English: TV)
   'tuba',     // 19
   'nasse',    // 20  (English: nose)
-  'Nantes',   // 21  (English: net)
+  'note (de musique)',   // 21  (English: net)
   'nonne',    // 22  (English: nun)
   'Nemo',     // 23
   'Nero',     // 24  (Roman emperor)
