@@ -67,7 +67,7 @@ export const PEGS: readonly string[] = [
   'chouette',  // 61
   'genie',    // 62
   'Jammy',      // 63
-  'cherry',   // 64
+  'chariot',   // 64
   'chilli',   // 65
   'juge',     // 66
   'chick',    // 67
