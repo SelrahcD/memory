@@ -90,8 +90,8 @@ export const PEGS: readonly string[] = [
   'phare',    // 84
   'fly',      // 85
   'vache',     // 86
-  'fig',      // 87
-  'FIFA',     // 88
+  'figue',      // 87
+  'fève',     // 88
   'Phoebe',   // 89  (from Friends)
   'bus',      // 90
   'bat',      // 91
