@@ -70,13 +70,13 @@ export const PEGS: readonly string[] = [
   'chariot',   // 64
   'chilli',   // 65
   'juge',     // 66
-  'chick',    // 67
+  'chèque',    // 67
   'chef',     // 68
   'chapeau',  // 69
   'caisse',   // 70
   'gâteau',   // 71
   'canoë',    // 72
-  'gum',      // 73
+  '(mini)keum',      // 73
   'car',      // 74
   'koala',    // 75
   'quiche',   // 76
