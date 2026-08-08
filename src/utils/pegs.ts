@@ -102,7 +102,7 @@ export const PEGS: readonly string[] = [
   'bougie',   // 96
   'bague',    // 97
   'boeuf',    // 98
-  'bébé',     // 99
+  'pape',     // 99
 ] as const;
 
 export type PegNumber = number;
