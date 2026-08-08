@@ -93,7 +93,7 @@ export const PEGS: readonly string[] = [
   'figue',      // 87
   'fève',     // 88
   'Phoebe',   // 89  (from Friends)
-  'bus',      // 90
+  'poisson',      // 90
   'bat',      // 91
   'piano',    // 92
   'pomme',    // 93
