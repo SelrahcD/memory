@@ -83,7 +83,7 @@ export const PEGS: readonly string[] = [
   'cake',     // 77
   'café',     // 78
   'cube',     // 79  (Rubik's)
-  'vase',     // 80
+  'fusée',     // 80
   'foot',     // 81
   'van',      // 82
   'fumée',    // 83
